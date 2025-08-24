@@ -278,6 +278,231 @@ def max_sub_array(nums,m):
     return max_sub_array
                 
             
-print(max_sub_array(nums,3))
+def max_sub_array_optimal(nums,k):
+    r = 0
+    l = 0
+    max_sub = 0
+    current = 0
+    while(l<len(nums) and r<len(nums)):
+        current+=nums[r]
+        if current<=k:
+            max_sub = max(r-l+1,max_sub)
+            r+=1
+        if current>k:
+            current-=nums[l]
+            l+=1
+            if current<=k:
+                max_sub = max(r-l+1,max_sub)
+                r+=1
+    return max_sub
                 
+def two_sum(nums,target):
+    for i in range(len(nums)):
+        for j in range(i+1,len(nums)):
+            if nums[i]+nums[j]==target:
+                return i,j
+    return False
+
+
+def two_sum_better(nums,target):
+    hash = {}
+    for i in range(len(nums)):
+        if target-nums[i] in hash:
+            return hash[target-nums[i]],i
+        else:
+            hash[nums[i]] = i
+    return False 
+
+def two_sum_optimal(nums,target):
+    l = 0
+    r = len(nums)-1
+    while (l<r):
+        if nums[l]+nums[r]>target:
+            r-=1
+        elif nums[l]+nums[r]<target:
+            l+=1
+        else:
+            return l,r
+    return False
+    
+
+def zero_one_two(nums):
+    low = 0
+    high = len(nums)-1
+    mid = 0
+    while (mid<=high):
+        if nums[mid]==0:
+            nums[mid],nums[low] = nums[low],nums[mid]
+            low+=1
+            mid+=1
+        elif nums[mid]==1:
+            mid+=1
+        else:
+            nums[mid],nums[high] = nums[high],nums[mid]
+            high-=1
+    print(nums)
+
+def majority_element(nums):
+    hash = {}
+    high = float('-inf')
+    freq = None
+    for num in nums:
+        if num not in hash:
+            hash[num] = 1
+        else:
+            hash[num]+=1
+    for key,value in hash.items():
+        if value>high:
+            high = value
+            freq = key
+    if high>len(nums)/2:
+        return freq
+    return -1
+
+def majority_element_optimal(nums):
+    left = 1
+    current = nums[0]
+    count = 1
+    while (left <len(nums)):
+        if nums[left]!=current and count==0:
+            current = nums[left]
+            count +=1
+            left+=1
             
+        elif nums[left]!=current and count>0:
+            count-=1
+            left+=1
+            
+        else:
+            count+=1
+            left+=1
+    return current
+
+
+def max_subarray_sum(nums):
+    sum = float('-inf')
+    for i in range(len(nums)):
+        for j in range(i,len(nums)):
+            count = 0
+            for k in range(i,j+1):
+                count+=nums[k]
+            if count >sum:
+                sum = count 
+    return sum
+
+
+def max_subarray_sum_better(nums):
+    sum = 0
+    for i in range(len(nums)):
+        count = 0
+        for j in range(i,len(nums)):
+            count += nums[j]
+            if count>sum:
+                sum = count
+    return sum
+
+def max_subarray_sum_optimal(nums):
+    max_subarray = float('-inf')
+    curr = 0
+    start = -1
+    end = -1
+    for index,num in enumerate(nums):
+        if curr ==0:
+            start = index
+        curr+=num
+        max_subarray = max(max_subarray,num,curr)
+        if curr>max_subarray:
+            end = index
+        elif curr<0:
+            curr = 0
+
+    return max_subarray
+
+def max_subarray_value(nums,target):
+    max_subarray = 0
+    for i in range(len(nums)):
+        sum = 0
+        for j in range(i,len(nums)):
+            sum+=nums[j]
+            if sum==target:
+                max_subarray = max(max_subarray,j-i+1)
+    return max_subarray
+
+def max_subarray_value_optimal(nums,target):
+    max_subarray_sum = float('-inf')
+    curr = 0
+    start = -1
+    end = -1
+    max_subarray = 0
+    for index,num in enumerate(nums):
+        if curr ==0:
+            start = index
+        curr+=num
+        if curr>max_subarray_sum:
+            end = index
+            max_subarray_sum = max(max_subarray_sum,num,curr)
+        if curr<0:
+            curr = 0
+        if max_subarray_sum == target:
+            max_subarray = max(max_subarray,end-start+1)
+
+    return max_subarray
+            
+        
+
+def buy_and_sell(nums):
+    profit = float('-inf')
+    buy = 0
+    sell = 0
+    for i in range(len(nums)):
+        buy = nums[i]
+        for j in range(i,len(nums)):
+            sell = nums[j]
+            profit = max(profit,sell-buy)
+    return profit
+
+
+def buy_and_sell_optimal(nums):
+    profit = 0
+    minimum = nums[0]
+    for i in range(1,len(nums)):
+        profit = max(profit,nums[i]-minimum)
+        minimum = min(minimum,nums[i])
+        
+    return profit
+
+def arrange_pos_neg(nums):
+    pos =  []
+    neg = []
+    for num in nums:
+        if num>=0:
+            pos.append(num)
+        else:
+            neg.append(num)
+    for i in range(0,len(nums)//2):
+        nums[i*2] = pos[i]
+        nums[i*2+1] = neg[i]
+        
+    return nums
+
+def arrange_pos_neg_better(nums):
+    pos = 0
+    neg = 1
+    _array = [0]*len(nums)
+    for num in nums:
+        if num>=0:
+            _array[pos] = num
+            pos +=2
+        else:
+            _array[neg] = num
+            neg+=2
+    return _array
+
+def gcdOfOddEvenSums(n) -> int:
+        odd = n*n
+        even = n*(n+1)
+        while even:
+            odd,even = even,odd%even
+        return odd
+
+print(gcdOfOddEvenSums(4))
